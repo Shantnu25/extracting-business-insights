@@ -41,4 +41,4 @@ banking_crisis: "no_crisis" means that no banking crisis occurred in the year an
 
 # Outcome
 
-Applied the descriptive dtatistics & probability skills learned to analyze the data.
+Applied the descriptive statistics & probability skills learned to analyze the data.
