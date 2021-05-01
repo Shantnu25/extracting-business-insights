@@ -1,8 +1,9 @@
-# --------------
+#Import modules
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+# visual_summary function
 
 def visual_summary(type_, df, col):
     """Summarize the Data using Visual Method.
@@ -28,6 +29,7 @@ def visual_summary(type_, df, col):
         print("Call the function again with proper parameters.")
     
 
+# central_tendency function
 
 def central_tendency(type_, df, col):
     """Calculate the measure of central tendency.
@@ -52,9 +54,7 @@ def central_tendency(type_, df, col):
         
     return cent_tend
 
-    
-    
-
+# measure_of_dispersion function
 
 def measure_of_dispersion(type_, df, col):
     """Calculate the measure of dispersion.
@@ -109,11 +109,10 @@ def measure_of_dispersion(type_, df, col):
         print("Call the measure_of_dispersion() with proper parameters.")
     
     
-
-    
     return disp
 
 
+# calculate_correlation function
 
 def calculate_correlation(type_, df, col1, col2):
     """Calculate the defined correlation coefficient.
@@ -153,7 +152,7 @@ def calculate_correlation(type_, df, col1, col2):
     
     return corr
 
-
+# calculate_probability_discrete function
 
 def calculate_probability_discrete(data, event):
     """Calculates the probability of an event from a discrete distribution.
@@ -170,15 +169,11 @@ def calculate_probability_discrete(data, event):
     total = data.value_counts().sum()
     yes = data.value_counts()[event]
     prob = yes/total
-    
-    
+        
     return prob
     
 
-
-
-
-
+# event_independence_check function
 
 def event_independence_check(prob_event1, prob_event2, prob_event1_event2):
     """Checks if two events are independent.
@@ -198,6 +193,7 @@ def event_independence_check(prob_event1, prob_event2, prob_event1_event2):
         print("Event 1 and Event 2 are not independent.")
 
 
+# bayes_theorem function
 
 def bayes_theorem(df, col1, event1, col2, event2):
     """Calculates the conditional probability using Bayes Theorem.
@@ -224,15 +220,17 @@ def bayes_theorem(df, col1, event1, col2, event2):
     return prob
 
 
-
-# Load the dataset
+#1 Load the dataset
 df = pd.read_csv(path)
 print(df.head())
 
-# Using the visual_summary(), visualize the distribution of the data provided.
-# You can also do it at country level or based on years by passing appropriate arguments to the fuction.
+#2 Calling the visual_summary() function, visualize the distribution of the data provided.
+
+#can also do it at country level or based on years by passing appropriate arguments to the fuction.
+
 print("Distribution of the Countries")
 visual_summary('pie', df, 'country')
+
 print("Distribution of exch_usd")
 visual_summary('hist', df, 'exch_usd')
 
@@ -240,31 +238,46 @@ for c in list(df['country'].unique()):
     print("Country: ", c)
     visual_summary('scatter', df[df['country'] == c], ['year', 'inflation_annual_cpi'])
 
-# You might also want to see the central tendency of certain variables. Call the central_tendency() to do the same.
+#3 To see the central tendency of certain variables. Calling the central_tendency().
+
 # This can also be done at country level or based on years by passing appropriate arguments to the fuction.
+
 print("Mean of exch_usd:", central_tendency('mean', df, 'exch_usd'))
 print("Mode of country", central_tendency('mode', df, 'country'))
 print("Median of exch_usd:", central_tendency('median', df, 'exch_usd'))
 
 
-# Measures of dispersion gives a good insight about the distribution of the variable.
-# Call the measure_of_dispersion() with desired parameters and see the summary of different variables.
+#4 Measures of dispersion gives a good insight about the distribution of the variable.
+
+# Calling  the measure_of_dispersion() 
+
 print("Range of inflation_annual_cpi: ", measure_of_dispersion('range', df, 'inflation_annual_cpi'))
+
 print("MAD of gdp_weighted_default:", measure_of_dispersion('MAD', df, 'gdp_weighted_default'))
+
 print("CV of gdp_weighted_default:", measure_of_dispersion('CV', df, 'gdp_weighted_default'))
+
 print("Std Dev of gdp_weighted_default:", measure_of_dispersion('std dev', df, 'gdp_weighted_default'))
+
 print("Cov between 'gdp_weighted_default', 'inflation_annual_cpi':", measure_of_dispersion('cov', df, ['gdp_weighted_default', 'inflation_annual_cpi']))
 
 
-# There might exists a correlation between different variables. 
-# Call the calculate_correlation() to check the correlation of the variables you desire.
+#5 There might exists a correlation between different variables. 
+
+#Calling the calculate_correlation() to check the correlation of the variables.
+
 print("Corr between inflation_annual_cpi and systemic_crisis", calculate_correlation('Pearson',df,'inflation_annual_cpi','systemic_crisis'))
 
-# From the given data, let's check the probability of banking_crisis for different countries.
-# Call the calculate_probability_discrete() to check the desired probability.
-# Also check which country has the maximum probability of facing the crisis.  
-# You can do it by storing the probabilities in a dictionary, with country name as the key. Or you are free to use any other technique.
+#6 To check the probability of banking_crisis for different countries.
+
+# Calling the calculate_probability_discrete()
+
+# Also checking which country has the maximum probability of facing the crisis.  
+
+# doing it by storing the probabilities in a dictionary, with country name as the key.
+
 prob_crisis = {}
+
 for c in list(df.country.unique()):
         print("Country: ", c)
         prob_crisis[c] = round(calculate_probability_discrete(df[df['country'] == c]['banking_crisis'], 'crisis' ), 4)
@@ -272,33 +285,42 @@ for c in list(df.country.unique()):
         
 print(prob_crisis)
 
+#7 checking if banking_crisis is independent of systemic_crisis, currency_crisis & inflation_crisis.
 
-# Next, let us check if banking_crisis is independent of systemic_crisis, currency_crisis & inflation_crisis.
-# Calculate the probabilities of these event using calculate_probability_discrete() & joint probabilities as well.
-# Then call event_independence_check() with above probabilities to check for independence.
+# Calculating the probabilities of these event using calculate_probability_discrete() & joint probabilities as well.
+
+# Then calling event_independence_check() with above probabilities to check for independence.
+
 b_crisis = calculate_probability_discrete(df['banking_crisis'], 'crisis' )
+
 s_crisis = calculate_probability_discrete(df['systemic_crisis'], 1 )
+
 c_crisis = calculate_probability_discrete(df['currency_crises'], 1 )
+
 i_crisis = calculate_probability_discrete(df['inflation_crises'], 1 )
 
 df1 = df[df['currency_crises'] == 1]
 
-# Calculate the P(A|B)
+#Calculate the P(A|B)
+
 p_i_given_c = df1[df1['inflation_crises'] == 1].shape[0]/df1.shape[0]
+
 p_c_i = p_i_given_c * c_crisis
+
 print(p_c_i, c_crisis * i_crisis)
+
 event_independence_check(c_crisis, i_crisis, p_c_i)
 
-# Finally, let us calculate the probability of banking_crisis given that other crises (systemic_crisis, currency_crisis & inflation_crisis one by one) have already occured.
-# This can be done by calling the bayes_theorem() you have defined with respective parameters.
+#9 Finally, calculating the probability of banking_crisis given that other crises (systemic_crisis, currency_crisis & inflation_crisis one by one) have already occured.
+
+# calling the bayes_theorem() 
 
 prob_ = []
 
 prob_.append(bayes_theorem(df,'banking_crisis','crisis','systemic_crisis', 1))
+
 prob_.append(bayes_theorem(df,'banking_crisis','crisis','currency_crises', 1))
+
 prob_.append(bayes_theorem(df,'banking_crisis','crisis','inflation_crises', 1))
 
-
 print("Probability of banking_crisis given that other crisis have already occured:", prob_)
-
-
